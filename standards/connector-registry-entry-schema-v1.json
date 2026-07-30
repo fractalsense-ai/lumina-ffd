@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://projectlumina.org/standards/connector-registry-entry-schema-v1.json",
+  "schema_version": "1.0.0",
+  "last_updated": "2026-07-26",
+  "title": "Connector Registry Entry Schema V1",
+  "description": "Canonical provider-neutral connector registry entry scoped to organization/site.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "organization_id",
+    "site_id",
+    "connector_instance_id",
+    "capability_namespaces",
+    "supported_action_classes",
+    "enabled",
+    "health_status"
+  ],
+  "properties": {
+    "organization_id": {"type": "string", "minLength": 1},
+    "site_id": {"type": "string", "minLength": 1},
+    "connector_instance_id": {"type": "string", "minLength": 1},
+    "provider_family": {"type": ["string", "null"], "minLength": 1},
+    "capability_namespaces": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "business-operation-request-schema-v1.json#/$defs/capability_namespace"
+      }
+    },
+    "supported_action_classes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "business-operation-request-schema-v1.json#/$defs/action_class"
+      }
+    },
+    "enabled": {"type": "boolean"},
+    "health_status": {
+      "type": "string",
+      "enum": ["healthy", "degraded", "unhealthy"]
+    },
+    "is_site_primary": {"type": "boolean"},
+    "health_checked_utc": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "metadata": {
+      "$ref": "business-operation-request-schema-v1.json#/$defs/safe_object"
+    }
+  }
+}

@@ -1140,6 +1140,24 @@ artifacts:
   status: active
   last_updated: 2026-07-24
   sha256: 153a9fa7bd2dd230b4b4e1c3ca256e730cd575ddf892e31fe488caff74a208ef
+- path: standards/connector-registry-entry-schema-v1.json
+  type: schema
+  doc_version: 1.0.0
+  status: active
+  last_updated: 2026-07-26
+  sha256: 2fdaf70396a45781d1fd229d0db56cc61a9376b673702e178b58e72c376ef7c7
+- path: standards/capability-route-policy-schema-v1.json
+  type: schema
+  doc_version: 1.0.0
+  status: active
+  last_updated: 2026-07-26
+  sha256: b43b4f1a1d3f79afb97cb80f5a7cc2305c36aaad34cfd323fb10830423aa5bea
+- path: standards/connector-resolution-result-schema-v1.json
+  type: schema
+  doc_version: 1.0.0
+  status: active
+  last_updated: 2026-07-26
+  sha256: a07bf0a9e08622dae5368f1e5836451051ad2b173a91ae6e1e93ddb6dbede096
 - path: standards/admin-command-schemas/approve-interpretation.json
   type: schema
   doc_version: 1.0.0

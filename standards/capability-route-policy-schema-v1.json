@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://projectlumina.org/standards/capability-route-policy-schema-v1.json",
+  "schema_version": "1.0.0",
+  "last_updated": "2026-07-26",
+  "title": "Capability Route Policy Schema V1",
+  "description": "Deterministic connector routing policy with precedence-aware capability routes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "policy_version",
+    "organization_id",
+    "site_id",
+    "routes"
+  ],
+  "properties": {
+    "policy_version": {"type": "integer", "minimum": 1},
+    "organization_id": {"type": "string", "minLength": 1},
+    "site_id": {"type": "string", "minLength": 1},
+    "organization_default_connector_id": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "$ref": "capability-route-policy-schema-v1.json#/$defs/route"
+      }
+    }
+  },
+  "$defs": {
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capability_namespace",
+        "connector_instance_id",
+        "priority"
+      ],
+      "properties": {
+        "capability_namespace": {
+          "$ref": "business-operation-request-schema-v1.json#/$defs/capability_namespace"
+        },
+        "connector_instance_id": {"type": "string", "minLength": 1},
+        "supported_action_classes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "business-operation-request-schema-v1.json#/$defs/action_class"
+          }
+        },
+        "priority": {"type": "integer", "minimum": 1},
+        "metadata": {
+          "$ref": "business-operation-request-schema-v1.json#/$defs/safe_object"
+        }
+      }
+    }
+  }
+}

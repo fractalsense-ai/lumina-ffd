@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://projectlumina.org/standards/connector-resolution-result-schema-v1.json",
+  "schema_version": "1.0.0",
+  "last_updated": "2026-07-26",
+  "title": "Connector Resolution Result Schema V1",
+  "description": "Transcript-free auditable connector routing decision result.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "resolution_id",
+    "request_id",
+    "organization_id",
+    "site_id",
+    "actor_id",
+    "action_class",
+    "capability_namespace",
+    "status",
+    "source",
+    "reason_code",
+    "policy_version",
+    "candidate_connector_ids",
+    "evaluated_utc"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "const": "1.0.0"},
+    "resolution_id": {"type": "string", "minLength": 1},
+    "request_id": {"type": "string", "minLength": 1},
+    "organization_id": {"type": "string", "minLength": 1},
+    "site_id": {"type": "string", "minLength": 1},
+    "actor_id": {"type": "string", "minLength": 1},
+    "action_class": {
+      "$ref": "business-operation-request-schema-v1.json#/$defs/action_class"
+    },
+    "capability_namespace": {
+      "$ref": "business-operation-request-schema-v1.json#/$defs/capability_namespace"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["resolved", "error"]
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "operation_override",
+        "capability_route",
+        "site_primary",
+        "organization_default",
+        "no_route"
+      ]
+    },
+    "reason_code": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "missing_idempotency_key",
+        "override_not_found",
+        "override_ineligible",
+        "ambiguous_route",
+        "capability_route_not_found",
+        "site_primary_not_found",
+        "organization_default_not_found",
+        "unsupported_capability",
+        "unsupported_action",
+        "connector_unhealthy",
+        "no_eligible_connector"
+      ]
+    },
+    "connector_instance_id": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "idempotency_key": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "correlation_id": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "policy_version": {"type": "integer", "minimum": 1},
+    "candidate_connector_ids": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "evaluated_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "metadata": {
+      "$ref": "business-operation-request-schema-v1.json#/$defs/safe_object"
+    }
+  }
+}
