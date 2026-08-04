@@ -2,8 +2,8 @@
 title: "Slice 38 — ERP JWT Verification Gateway and Auth Transition"
 slice: 38
 status: planned
-version: 0.1.0
-last_updated: 2026-08-03
+version: 0.1.1
+last_updated: 2026-08-04
 ---
 
 ## Purpose
@@ -17,6 +17,11 @@ Implement Lumina runtime verification of ERP-issued JWTs for domain/user tracks 
 - Define domain/user middleware transition from Lumina-issued tokens to ERP-issued tokens.
 - Define compatibility/deprecation schedule for legacy domain/user login endpoints.
 - Keep system-track login and token issuance (`/api/admin/auth/*`) in Lumina.
+
+## 2026-08-04 Alignment Addendum
+
+- Verification and transition flows should retain identity/context metadata needed for scoped institutional-memory linkage and decision traceability.
+- Auth failures due to missing claims should map to deterministic missing-information acquisition or denial outcomes per policy, not ambiguous terminal states.
 
 ## Out of Scope
 

@@ -1,13 +1,13 @@
 ---
-version: 1.0.0
-last_updated: 2026-05-07
+version: 1.0.1
+last_updated: 2026-08-04
 ---
 
 # Slice 4: System Pack Authority Gate
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 **Status:** Active
-**Last updated:** 2026-05-07
+**Last updated:** 2026-08-04
 **PR:** This document is itself the primary deliverable of Slice 4.
 
 ---
@@ -35,6 +35,11 @@ typed request context; it does not grant authority.
 - Register the new file in `docs/MANIFEST.yaml`.
 - Optionally add lightweight enum/type scaffolding only if a repository
   schema/contracts convention already exists.
+
+## 2026-08-04 Alignment Addendum
+
+- Authority outcomes should differentiate "not authorized" from "authorized but missing information" so operational flow can continue via bounded acquisition.
+- Decisions should not infer workflow completion from task/node readiness signals.
 
 ---
 

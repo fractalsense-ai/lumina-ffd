@@ -1,13 +1,13 @@
 ---
-version: 1.0.0
-last_updated: 2026-05-07
+version: 1.0.1
+last_updated: 2026-08-04
 ---
 
 # Slice 5: System Pack as Sole Coding Agent Ingress
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 **Status:** Active
-**Last updated:** 2026-05-07
+**Last updated:** 2026-08-04
 **PR:** This document is itself the primary deliverable of Slice 5.
 
 ---
@@ -34,6 +34,11 @@ work.
 - Preserve governance/safety invariants for authority, scoping, templating,
   staging, and activation boundaries.
 - Update roadmap discoverability and manifest entries for this slice.
+
+## 2026-08-04 Alignment Addendum
+
+- Sole-ingress enforcement remains orthogonal to domain DAG orchestration; DAG internals stay in the domain pack.
+- Ingress denials should explicitly support "needs_information" routing to actor/ERP/institutional-memory acquisition before escalation where policy allows.
 
 ---
 

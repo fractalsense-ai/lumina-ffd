@@ -2,8 +2,8 @@
 title: "Slice 37 — ERP Identity Authority and Claim Contract"
 slice: 37
 status: active
-version: 0.1.0
-last_updated: 2026-08-03
+version: 0.1.1
+last_updated: 2026-08-04
 ---
 
 ## Purpose
@@ -18,6 +18,11 @@ Establish ERP as the single source of truth (SSOT) for non-system identity and a
 - Define issuer, audience, expiry, and key-rotation contract requirements.
 - Define required role/context mapping from ERP claims into Lumina authorization checks.
 - Define break-glass and outage posture for temporary fallback and audit requirements.
+
+## 2026-08-04 Alignment Addendum
+
+- Claim contracts should preserve sufficient scoped linkage fields to connect identity decisions with institutional-memory decision groups and entity state traces.
+- Authorization outcomes should distinguish denied-from-policy vs missing-information-required routing for deterministic follow-up behavior.
 
 ## Out of Scope
 

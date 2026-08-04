@@ -2,8 +2,8 @@
 title: "Slice 36 — Single-Box Deployment and Operational Hardening"
 slice: 36
 status: planned
-version: 0.2.0
-last_updated: 2026-08-03
+version: 0.2.1
+last_updated: 2026-08-04
 ---
 
 ## Purpose
@@ -17,6 +17,11 @@ Define and validate the single-box deployment profile for pilot rollout, includi
 - Define backup/restore and local retention controls for institutional memory artifacts.
 - Define operator runbooks for route failures, connector degradation, and escalation backlog handling.
 - Preserve Slice 39 generic service-core invariants so vertical variation remains profile/presentation-level during hardening work.
+
+## 2026-08-04 Alignment Addendum
+
+- Operational hardening must preserve domain-owned task-graph orchestration boundaries and keep host runtime graph-agnostic.
+- Degraded-mode runbooks should include missing-information acquisition order (actor prompt -> ERP lookup -> scoped institutional retrieval) before escalation.
 
 ## Out of Scope
 

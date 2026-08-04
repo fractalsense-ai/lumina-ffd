@@ -1,13 +1,13 @@
 ---
-version: 1.2.6
-last_updated: 2026-08-03
+version: 1.2.7
+last_updated: 2026-08-04
 ---
 
 # Lumina Framework Roadmap
 
-**Version:** 1.2.6
+**Version:** 1.2.7
 **Status:** Active
-**Last updated:** 2026-08-03
+**Last updated:** 2026-08-04
 
 ---
 
@@ -79,6 +79,17 @@ invariants it established.
 ## Direction Lock
 
 Slice 39 hard-locks the ERP integration direction to a reusable generic service core with profile-layer variance. Until explicitly superseded, new vertical onboarding work should extend profile and mapping layers first rather than introducing core workflow forks.
+
+## Active Alignment Thread (2026-08-04)
+
+Current active slices and planned slices align to the following execution thread:
+
+- DAG/task dependency logic remains domain-pack internal.
+- `task_ready_for_execution` is treated as current node/task readiness, not whole-workflow completion.
+- Missing prerequisites route to bounded information acquisition (actor prompts, ERP lookups, scoped institutional memory retrieval).
+- Institutional memory records must support grouping similar decisions and linking customer/client/entity state transitions through stable record linkage metadata.
+
+This thread is carried through non-delivered slices 01-06, 25, 29, 36, 37, 38, and 39.
 
 ---
 

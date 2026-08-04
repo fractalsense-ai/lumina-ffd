@@ -1,13 +1,13 @@
 ---
-version: 1.0.0
-last_updated: 2026-05-07
+version: 1.0.1
+last_updated: 2026-08-04
 ---
 
 # Slice 3: Request Intake and Classification
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 **Status:** Active
-**Last updated:** 2026-05-07
+**Last updated:** 2026-08-04
 **PR:** This document is itself the primary deliverable of Slice 3.
 
 ---
@@ -41,6 +41,11 @@ Coding Agent. It does not mutate system state.
 - Register the new file in `docs/MANIFEST.yaml`.
 - Optionally add lightweight enum/type scaffolding if the repository already
   has a schema/contracts convention (minimal, aligned with existing patterns).
+
+## 2026-08-04 Alignment Addendum
+
+- Classification should surface explicit "missing prerequisite information" outcomes that route to bounded acquisition rather than silent failure.
+- Domain DAG/task-graph semantics remain downstream/domain-owned; classification remains host-generic.
 
 ---
 

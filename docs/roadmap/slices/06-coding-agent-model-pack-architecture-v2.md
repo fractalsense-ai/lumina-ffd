@@ -1,13 +1,13 @@
 ---
-version: 1.0.0
-last_updated: 2026-06-19
+version: 1.0.1
+last_updated: 2026-08-04
 ---
 
 # Slice 6: Coding Agent Model Pack Architecture V2
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 **Status:** Active
-**Last updated:** 2026-06-19
+**Last updated:** 2026-08-04
 **PR:** This document is itself the primary deliverable of Slice 6.
 
 ---
@@ -38,6 +38,12 @@ slice.
 - Preserve the System Pack-only ingress invariant established in Slice 5.
 - Keep the architecture hardware-neutral and provider-neutral.
 - Update roadmap discoverability and manifest entries for this slice.
+
+## 2026-08-04 Alignment Addendum
+
+- Architecture remains host-generic: domain DAG dependencies and ready-node evaluation are domain-pack responsibilities.
+- `task_ready_for_execution` must be interpreted as current task/node readiness only.
+- Experiential/institutional memory contracts should support grouping similar decisions and linking entity state transitions via stable record linkage metadata.
 
 ---
 

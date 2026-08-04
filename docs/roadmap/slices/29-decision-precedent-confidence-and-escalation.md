@@ -2,8 +2,8 @@
 title: "Slice 29 — Decision Precedent, Confidence, and Escalation"
 slice: 29
 status: planned
-version: 0.2.0
-last_updated: 2026-07-20
+version: 0.2.1
+last_updated: 2026-08-04
 ---
 
 ## Purpose
@@ -30,6 +30,12 @@ permits and create a human-approval packet when confidence or risk requires it.
   record IDs, policy version, component scores, and selected tier.
 - Reuse existing System Log `EscalationRecord` lifecycle for mandatory
   escalation; Slice 29 creates evidence and a pending approval request only.
+
+## 2026-08-04 Alignment Addendum
+
+- Decision precedent routing remains compatible with domain-owned DAG/task orchestration; host/core stays generic.
+- Precedent and escalation evidence should include stable linkage metadata for grouping similar decision classes and tracing entity state transitions over time.
+- Missing-information cases must be explicit confidence inputs and route to bounded acquisition paths before forced escalation when policy permits.
 
 ## Out of Scope
 

@@ -2,8 +2,8 @@
 title: "Slice 39 — Generic ERP Service Core and Vertical Profile Layer"
 slice: 39
 status: planned
-version: 0.1.0
-last_updated: 2026-08-03
+version: 0.1.1
+last_updated: 2026-08-04
 ---
 
 ## Purpose
@@ -17,6 +17,12 @@ Lock the reusable ERP integration direction by defining one canonical service wo
 - Isolate ERP provider specifics to thin mapping adapters.
 - Define optional low-change customization hooks (for example custom doctype/table mappings) that do not alter canonical contracts.
 - Define parity expectations across at least ERPNext and Odoo for identical canonical operations.
+
+## 2026-08-04 Alignment Addendum
+
+- Canonical service-core flow remains host-generic while domain profile orchestration (including DAG/task dependency handling) stays in the domain/profile layer.
+- `task_ready_for_execution` semantics are node/task readiness only and must not be overloaded as workflow-terminal state.
+- Profile parity evidence should include linkage metadata that groups similar decisions and tracks entity state transitions across profiles/providers.
 
 ## Out of Scope
 

@@ -1,13 +1,13 @@
 ---
-version: 1.0.0
-last_updated: 2026-05-06
+version: 1.0.1
+last_updated: 2026-08-04
 ---
 
 # Slice 2: System Update Vocabulary
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 **Status:** Active
-**Last updated:** 2026-05-06
+**Last updated:** 2026-08-04
 **PR:** This document is itself the primary deliverable of Slice 2.
 
 ---
@@ -37,6 +37,11 @@ behaviour described by these terms; this slice only names and contracts them.
   correctness ≠ governance approval, activation ownership).
 - Update the roadmap index so Slice 2 is discoverable.
 - Register the new file in `docs/MANIFEST.yaml`.
+
+## 2026-08-04 Alignment Addendum
+
+- `BuildResult` and downstream lifecycle terms should not reinterpret `task_ready_for_execution` as workflow-complete; treat it as node/task readiness only.
+- Missing-information acquisition is a first-class route: actor clarification, ERP lookup, or scoped institutional-memory retrieval before denial/escalation.
 
 ---
 

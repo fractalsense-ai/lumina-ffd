@@ -1,13 +1,13 @@
 ---
-version: 1.0.0
-last_updated: 2026-05-05
+version: 1.0.1
+last_updated: 2026-08-04
 ---
 
 # Slice 1: Framework Boundary and Final Shape Documentation
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 **Status:** Active
-**Last updated:** 2026-05-05
+**Last updated:** 2026-08-04
 **PR:** This document is itself the primary deliverable of Slice 1.
 
 ---
@@ -43,6 +43,11 @@ must be documented clearly and unambiguously.
   PR does not perform that work.
 - Establish the PR-per-slice roadmap convention so later PRs can continue from
   Slice 2.
+
+## 2026-08-04 Alignment Addendum
+
+- Preserve framework boundary: DAG/task graph internals are domain-pack owned and are not promoted into `src/lumina/` host logic.
+- Preserve host contract: core runtime consumes generic readiness/status signals only.
 
 ---
 

@@ -2,8 +2,8 @@
 title: "Slice 25 — B2B Workstream Boundary and Global Task Graph"
 slice: 25
 status: planned
-version: 0.1.0
-last_updated: 2026-07-11
+version: 0.1.1
+last_updated: 2026-08-04
 ---
 
 ## Purpose
@@ -15,6 +15,12 @@ Define the implementation boundary for the `b2b-institutional-memory-business-sy
 - Formalize the global task graph and phase order for the B2B workstream.
 - Record explicit system boundaries: external system state ownership, Lumina memory ownership, and governance constraints.
 - Define non-negotiable constraints for credentials, transcript handling, and deterministic test posture.
+
+## 2026-08-04 Alignment Addendum
+
+- Global task graph semantics remain domain-owned orchestration behavior; host services remain graph-agnostic.
+- Runtime readiness semantics treat `task_ready_for_execution` as current node/task readiness only.
+- Missing-prerequisite branches should route to bounded information acquisition (actor clarification, ERP retrieval, scoped institutional memory) before escalation when policy permits.
 
 ## Out of Scope
 
