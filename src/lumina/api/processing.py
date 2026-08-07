@@ -76,6 +76,51 @@ from lumina.orchestrator.ppa_orchestrator import PPAOrchestrator
 log = logging.getLogger("lumina-api")
 vlog = logging.getLogger("lumina.verbose")
 
+_PIPELINE_ORDER_CONTRACT = "pipeline_order_enforcement_v1"
+
+
+def _pipeline_order_payload(
+    session_id: str,
+    resolved_domain_id: str,
+    stage_trace: list[str],
+    degraded_reasons: list[str],
+) -> dict[str, Any]:
+    """Build pseudonymous observability payload for pipeline-order enforcement."""
+    return {
+        "contract": _PIPELINE_ORDER_CONTRACT,
+        "session_ref": _canonical_sha256(session_id)[:12],
+        "domain_id": resolved_domain_id,
+        "stage_trace": list(stage_trace),
+        "degraded": bool(degraded_reasons),
+        "degraded_reasons": list(degraded_reasons),
+    }
+
+
+def _pipeline_order_denied_result(
+    session_id: str,
+    resolved_domain_id: str,
+    stage_trace: list[str],
+    degraded_reasons: list[str],
+    reason: str,
+) -> dict[str, Any]:
+    """Return a deterministic deny payload for missing critical pipeline stages."""
+    _payload = _pipeline_order_payload(
+        session_id,
+        resolved_domain_id,
+        stage_trace,
+        degraded_reasons,
+    )
+    _payload["denied_reason"] = reason
+    return {
+        "response": "I cannot process this input because runtime stage-order validation failed.",
+        "action": "pipeline_order_denied",
+        "prompt_type": "pipeline_order_denied",
+        "escalated": True,
+        "tool_results": {},
+        "domain_id": resolved_domain_id,
+        "_pipeline_order": _payload,
+    }
+
 
 def _load_journal_nlp_pre_interpreter():
     module_key = "lumina_model_packs_education_journal_nlp_pre_interpreter"
@@ -180,6 +225,16 @@ def process_message(
         holodeck = True
 
     session = get_or_create_session(session_id, domain_id=domain_id, user=user)
+    _pipeline_stage_trace: list[str] = []
+    _pipeline_degraded_reasons: list[str] = []
+
+    def _mark_pipeline_stage(stage: str) -> None:
+        if stage not in _pipeline_stage_trace:
+            _pipeline_stage_trace.append(stage)
+
+    def _add_pipeline_degraded(reason: str) -> None:
+        if reason not in _pipeline_degraded_reasons:
+            _pipeline_degraded_reasons.append(reason)
 
     vlog.debug("[GATE] session=%s domain=%s user=%s", session_id, domain_id, user.get("username") if user else None)
 
@@ -282,6 +337,7 @@ def process_message(
     )
     if _gate is not None:
         return _gate
+    _mark_pipeline_stage("auth")
 
     # ── Layer 2: Interceptors (early-return paths) ────────────
     domain_physics = getattr(orch, "domain", None) or runtime.get("domain") or {}
@@ -340,11 +396,13 @@ def process_message(
     # registered a multi_task_turn_interpreter_fn, the multi-task path fires.
     _nlp_pre_result: dict[str, Any] = {}
     _multi_intent_detected = False
+    _nlp_pre_executed = False
     if not deterministic_response and turn_data_override is None:
         _nlp_fn_pre = runtime.get("nlp_pre_interpreter_fn")
         if _nlp_fn_pre is not None:
             try:
                 _nlp_pre_result = _nlp_fn_pre(input_text, task_context) or {}
+                _nlp_pre_executed = True
                 _nlp_intent_scores = _nlp_pre_result.get("intent_scores") or {}
                 _multi_intent_detected = (
                     len([s for s in _nlp_intent_scores.values() if s > 0]) >= 2
@@ -355,6 +413,15 @@ def process_message(
             except Exception:
                 _nlp_pre_result = {}
                 _multi_intent_detected = False
+
+    if _nlp_pre_executed:
+        _mark_pipeline_stage("nlp")
+    elif deterministic_response:
+        _add_pipeline_degraded("nlp_stage_bypassed_deterministic")
+    elif turn_data_override is not None:
+        _add_pipeline_degraded("nlp_stage_bypassed_turn_override")
+    else:
+        _add_pipeline_degraded("nlp_pre_interpreter_unavailable")
 
     # ── Journal entity extraction (SVA-gated, privacy-preserving) ─
     # When the client sends a journal_entity_salt (device-local, never
@@ -469,6 +536,15 @@ def process_message(
                 slm_weight_overrides=runtime.get("slm_weight_overrides") or {},
             )
     turn_data = normalize_turn_data(turn_data, runtime.get("turn_input_schema") or {})
+    if not isinstance(turn_data, dict):
+        return _pipeline_order_denied_result(
+            session_id,
+            resolved_domain_id,
+            _pipeline_stage_trace,
+            _pipeline_degraded_reasons,
+            reason="semantic_routing_output_invalid",
+        )
+    _mark_pipeline_stage("semantic_routing")
 
     # ── Multi-task graph extraction ───────────────────────────
     # If the multi-task interpreter emitted a {tasks: [...]} graph shape,
@@ -594,7 +670,32 @@ def process_message(
 
     # ── Layer 4: Orchestration ────────────────────────────────
     vlog.debug("[ORCH] Orchestrating turn (domain=%s)", resolved_domain_id)
+    if "auth" not in _pipeline_stage_trace:
+        return _pipeline_order_denied_result(
+            session_id,
+            resolved_domain_id,
+            _pipeline_stage_trace,
+            _pipeline_degraded_reasons,
+            reason="missing_auth_stage",
+        )
+    if "semantic_routing" not in _pipeline_stage_trace:
+        return _pipeline_order_denied_result(
+            session_id,
+            resolved_domain_id,
+            _pipeline_stage_trace,
+            _pipeline_degraded_reasons,
+            reason="missing_semantic_routing_stage",
+        )
+    if "nlp" not in _pipeline_stage_trace:
+        _add_pipeline_degraded("nlp_stage_not_executed")
+
     turn_provenance: dict[str, Any] = dict(runtime_provenance)
+    turn_provenance["pipeline_order"] = _pipeline_order_payload(
+        session_id,
+        resolved_domain_id,
+        _pipeline_stage_trace,
+        _pipeline_degraded_reasons,
+    )
     turn_provenance["turn_data_hash"] = _canonical_sha256(turn_data)
     if model_id is not None:
         turn_provenance["model_id"] = model_id
@@ -608,6 +709,7 @@ def process_message(
         turn_data,
         provenance_metadata=turn_provenance,
     )
+    _mark_pipeline_stage("ppa")
     vlog.debug("[ORCH] action=%s prompt_type=%s", resolved_action, prompt_contract.get("prompt_type"))
 
     # ── Multi-task graph walk ─────────────────────────────────
@@ -853,6 +955,12 @@ def process_message(
         tool_results, resolved_domain_id, structured_content,
         session_id, _session_containers,
         _seal, _seal_meta, _transcript,
+    )
+    result["_pipeline_order"] = _pipeline_order_payload(
+        session_id,
+        resolved_domain_id,
+        _pipeline_stage_trace,
+        _pipeline_degraded_reasons,
     )
 
     # ── Holodeck: attach raw structured evidence ──────────────
