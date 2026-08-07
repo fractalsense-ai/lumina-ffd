@@ -550,3 +550,5 @@ class TestTaskCompletePayloadSeparation:
         assert session["current_task"].get("solved") is not True, (
             "Session current_task must no longer be marked as solved after resume replacement"
         )
+
+
